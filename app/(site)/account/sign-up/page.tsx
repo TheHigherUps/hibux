@@ -10,31 +10,30 @@ export default function Index() {
     const router = useRouter()
     const [form, setForm] = useState({ email: "", password: "" })
     const [message, setMessage] = useState("")
-    const [loading, setLoading] = useState(false)
 
     async function createAccount(e: React.FormEvent<EventTarget>) {
         e.preventDefault()
-        try {
-            setLoading(true)
-            const { error } = await supabase.auth.signInWithPassword({
-                email: form.email,
-                password: form.password,
-            })
-            router.refresh()
-            if (error) {
-                setMessage(error.message)
-            } else {
-                setMessage("Success!")
-            }
-        } catch (error) {
+        const { error } = await supabase.auth.signUp({
+            email: form.email,
+            password: form.password,
+            options: {
+                emailRedirectTo: `${location.origin}/auth/callback`,
+                data: {
+                    first_name: "Tim",
+                    verified: true,
+                },
+            },
+        })
+        router.refresh()
+        if (error) {
             console.log(error)
-        } finally {
-            setLoading(false)
+        } else {
+            setMessage("Account Created! Check email for further intructions")
         }
     }
     return (
         <div className="m-24 flex flex-col gap-10 items-center">
-            <h1 className="text-4xl">Log in to your HiBlox Account</h1>
+            <h1 className="text-4xl">Create a HiBlox Account</h1>
             <form onSubmit={createAccount} className="flex flex-col gap-5 ">
                 <input
                     value={form.email}
@@ -51,19 +50,18 @@ export default function Index() {
                     className="px-5 py-4 text-2xl"
                 />
                 <button
-                    disabled={loading}
                     type="submit"
-                    className="text-2xl bg-green-400 rounded-md disabled:bg-green-400/40 disabled:text-neutral-400"
+                    className="text-2xl bg-green-400 rounded-md"
                 >
-                    Log in
+                    Create Account
                 </button>
                 <p className="text-neutral-500 text-center">
-                    Don't have an account?{" "}
+                    Already have an account?{" "}
                     <Link
-                        href="/account/sign-up"
+                        href="/account/sign-in"
                         className="underline hover:text-white transition"
                     >
-                        Create one now!
+                        Sign in now!
                     </Link>
                 </p>
                 <p>{message}</p>

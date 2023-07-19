@@ -13,25 +13,25 @@ export interface Database {
         Row: {
           created_at: string | null
           created_by: string | null
-          description: string
-          id: string
-          image: string | null
+          description: string | null
+          id: number
+          image: string
           name: string
         }
         Insert: {
           created_at?: string | null
           created_by?: string | null
-          description: string
-          id?: string
-          image?: string | null
+          description?: string | null
+          id?: number
+          image: string
           name: string
         }
         Update: {
           created_at?: string | null
           created_by?: string | null
-          description?: string
-          id?: string
-          image?: string | null
+          description?: string | null
+          id?: number
+          image?: string
           name?: string
         }
         Relationships: []

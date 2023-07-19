@@ -14,7 +14,7 @@ export default function Home() {
             setGames(games)
         }
         getGames()
-    }, [])
+    }, [supabase])
     console.log(games)
     return (
         <div className="m-24">

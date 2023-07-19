@@ -8,6 +8,8 @@ import {
 } from "@supabase/auth-helpers-nextjs"
 import { Database } from "@/types_db"
 import Link from "next/link"
+import { GoVerified } from "react-icons/go"
+import Button from "./Button"
 
 interface HeaderProps {
     children: React.ReactNode
@@ -60,10 +62,29 @@ const Header: React.FC<HeaderProps> = ({ user, children }) => {
                     </div>
                 </div>
                 {user ? (
-                    <button onClick={signOut}>Sign out</button>
+                    <div className="flex flex-row gap-5">
+                        <div className="flex items-center gap-1">
+                            <p>
+                                Welcome, {user.user_metadata.first_name || ""}
+                            </p>
+                            {user.user_metadata.verified ? (
+                                <GoVerified
+                                    size={24}
+                                    style={{ color: "lightblue" }}
+                                />
+                            ) : null}
+                        </div>
+                        <button onClick={signOut}>Sign out</button>
+                    </div>
                 ) : (
                     <div className="flex gap-2">
-                        <Link
+                        <Link href="/account/sign-in">
+                            <Button variant="secondary">Sign in</Button>
+                        </Link>
+                        <Link href="/account/sign-up">
+                            <Button>Sign up</Button>
+                        </Link>
+                        {/* <Link
                             href="/account/sign-in"
                             className="bg-neutral-200  p-2 rounded-xl text-neutral-800"
                         >
@@ -74,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({ user, children }) => {
                             className="bg-green-400 p-2 rounded-xl text-neutral-100"
                         >
                             Sign up
-                        </Link>
+                        </Link> */}
                     </div>
                 )}
             </header>

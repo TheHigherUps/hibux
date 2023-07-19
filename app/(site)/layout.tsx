@@ -1,5 +1,5 @@
 import Header from "@/components/Header"
-import "./globals.css"
+import "../globals.css"
 import type { Metadata } from "next"
 import { Inter, Noto_Sans, Pangolin } from "next/font/google"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
