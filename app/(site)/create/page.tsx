@@ -25,6 +25,7 @@ export default function Index() {
                 created_by: createForm.creator,
                 description: createForm.description,
                 name: createForm.name,
+                image: "http://localhost:54321/storage/v1/object/public/games_images/d66ae37d46e00a1ecacfe9531986690a.jpg",
             })
         } catch (e) {
             alert("Error creating PlaySpace")
