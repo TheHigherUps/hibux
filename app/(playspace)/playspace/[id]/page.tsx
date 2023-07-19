@@ -37,7 +37,7 @@ export default function Index({ params }: { params: { id: string } }) {
             }
         }
         getGame()
-    }, [supabase])
+    }, [supabase, params.id])
     return (
         <div>
             <Transition
