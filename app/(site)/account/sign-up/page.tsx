@@ -37,6 +37,7 @@ export default function Index() {
             <h1 className="text-4xl">Create a HiBlox Account</h1>
             <form onSubmit={createAccount} className="flex flex-col gap-5 ">
                 <input
+                    placeholder="Enter Email"
                     value={form.email}
                     onChange={(e) =>
                         setForm({ ...form, email: e.target.value })
@@ -44,6 +45,7 @@ export default function Index() {
                     className="px-5 py-4 text-2xl rounded-lg"
                 />
                 <input
+                    placeholder="Enter Password"
                     value={form.password}
                     onChange={(e) => {
                         setForm({ ...form, password: e.target.value })
