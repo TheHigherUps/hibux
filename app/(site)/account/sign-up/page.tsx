@@ -18,15 +18,16 @@ export default function Index() {
             password: form.password,
             options: {
                 emailRedirectTo: `${location.origin}/auth/callback`,
-                data: {
-                    first_name: "Tim",
-                    verified: true,
-                },
+                // data: {
+                //     first_name: "Tim",
+                //     verified: true,
+                // },
             },
         })
         router.refresh()
         if (error) {
             console.log(error)
+            setMessage(error.message)
         } else {
             setMessage("Account Created! Check email for further intructions")
         }
@@ -40,14 +41,14 @@ export default function Index() {
                     onChange={(e) =>
                         setForm({ ...form, email: e.target.value })
                     }
-                    className="px-5 py-4 text-2xl"
+                    className="px-5 py-4 text-2xl rounded-lg"
                 />
                 <input
                     value={form.password}
                     onChange={(e) => {
                         setForm({ ...form, password: e.target.value })
                     }}
-                    className="px-5 py-4 text-2xl"
+                    className="px-5 py-4 text-2xl rounded-lg"
                 />
                 <button
                     type="submit"

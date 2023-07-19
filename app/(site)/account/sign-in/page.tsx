@@ -21,6 +21,19 @@ export default function Index() {
                 email: form.email,
                 password: form.password,
             })
+            if (error?.message === "Email not confirmed") {
+                const { error: resendEmail } = await supabase.auth.resend({
+                    type: "signup",
+                    email: form.email,
+                    options: {
+                        emailRedirectTo: `${location.origin}/auth/callback`,
+                    },
+                })
+                setMessage(
+                    "Email not confirmed. Check email for more information"
+                )
+                return
+            }
             if (error) {
                 setMessage(error.message)
             } else {
