@@ -5,6 +5,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import logo from "@/public/images/logo.png"
+import Image from "next/image"
 
 export default function Index() {
     const supabase = createClientComponentClient<Database>()
@@ -48,7 +50,12 @@ export default function Index() {
     }
     return (
         <div className="m-24 flex flex-col gap-10 items-center">
-            <h1 className="text-4xl">Log in to your HiBlox Account</h1>
+            <Image
+                src={logo}
+                alt=""
+                className="aspect-auto h-12 object-contain"
+            />
+            <h1 className="text-4xl">Sign in to your account</h1>
             <form onSubmit={createAccount} className="flex flex-col gap-5 ">
                 <input
                     placeholder="Enter Email"
@@ -72,7 +79,7 @@ export default function Index() {
                     disabled={loading}
                     loading={loading}
                 >
-                    Log in
+                    Sign in
                 </Button>
                 <button
                     disabled={loading}

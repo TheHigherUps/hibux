@@ -10,6 +10,8 @@ import { Database } from "@/types_db"
 import Link from "next/link"
 import { GoVerified } from "react-icons/go"
 import Button from "./Button"
+import logo from "@/public/images/logo.png"
+import Image from "next/image"
 
 interface HeaderProps {
     children: React.ReactNode
@@ -45,16 +47,52 @@ const Header: React.FC<HeaderProps> = ({ user, children }) => {
         ],
         [pathname]
     )
+    const userRoutes = useMemo(
+        () => [
+            {
+                label: "Profile",
+                href: "/profile",
+                active: pathname === "/profile",
+            },
+            {
+                label: "Character",
+                href: "/character",
+                active: pathname === "/character",
+            },
+            {
+                label: "Friends",
+                href: "/friends",
+                active: pathname === "/friends",
+            },
+            {
+                label: "Account",
+                href: "/account",
+                active: pathname === "/account",
+            },
+            {
+                label: "Invites",
+                href: "/invites",
+                active: pathname === "/invites",
+            },
+        ],
+        [pathname]
+    )
     async function signOut() {
         const { error } = await supabase.auth.signOut()
         router.refresh()
     }
     return (
         <div className="h-full flex flex-col">
-            <header className=" w-full bg-gray-800 flex items-center px-4 py-3 justify-between">
+            <header className=" w-full h-16 bg-gray-800 flex items-center px-4 py-3 justify-between">
                 <div className="flex items-center gap-16">
-                    <h1 className="text-2xl">HiBlox</h1>
-
+                    <Link href="/">
+                        <Image
+                            src={logo}
+                            alt=""
+                            className=" aspect-auto h-full w-32 object-cover"
+                        />
+                    </Link>
+                    {/* <h1 className="text-2xl">HiBlox</h1> */}
                     <div className="flex gap-16">
                         {routes.map((item) => {
                             return <HeaderLink key={item.label} {...item} />
@@ -64,9 +102,7 @@ const Header: React.FC<HeaderProps> = ({ user, children }) => {
                 {user ? (
                     <div className="flex flex-row gap-5">
                         <div className="flex items-center gap-1">
-                            <p>
-                                Welcome, {user.user_metadata.first_name || ""}
-                            </p>
+                            <p>Welcome, {user.user_metadata.username || ""}</p>
                             {user.user_metadata.verified ? (
                                 <GoVerified
                                     size={24}
@@ -99,6 +135,15 @@ const Header: React.FC<HeaderProps> = ({ user, children }) => {
                     </div>
                 )}
             </header>
+            {user ? (
+                <header className="w-full h-12 bg-gray-950 px-4 flex flex-row  items-center">
+                    <div className="flex gap-8">
+                        {userRoutes.map((item) => {
+                            return <HeaderLink key={item.label} {...item} />
+                        })}
+                    </div>
+                </header>
+            ) : null}
             <main className="flex-1 h-full overflow-y-auto bg-gray-700">
                 {children}
             </main>
