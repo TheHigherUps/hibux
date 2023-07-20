@@ -45,6 +45,12 @@ export default function Index() {
     const form = useForm<FormInput>({ resolver: zodResolver(Schema) })
     const { register, control, handleSubmit, formState } = form
     const { errors } = formState
+    // const [form, setForm] = useState({
+    //     username: "",
+    //     email: "",
+    //     password: "",
+    //     passwordConfirm: "",
+    // })
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState("")
 
@@ -55,36 +61,36 @@ export default function Index() {
         console.log("p")
     }, [message])
 
-    async function createAccount(data: FormInput) {
-        try {
-            setLoading(true)
-            const { error } = await supabase.auth.signUp({
-                email: data.email,
-                password: data.password,
-                options: {
-                    emailRedirectTo: `${location.origin}/auth/callback`,
-                    data: {
-                        username: data.username,
-                        // verified: true,
-                    },
-                },
-            })
-            router.refresh()
-            if (error) {
-                console.log(error)
-                setMessage(error.message)
-            } else {
-                setMessage(
-                    "Account Created! Check email for further intructions"
-                )
-            }
-            messageRef.current?.scrollIntoView({ behavior: "smooth" })
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    // async function createAccount(data: FormInput) {
+    //     try {
+    //         setLoading(true)
+    //         const { error } = await supabase.auth.signUp({
+    //             email: data.email,
+    //             password: data.password,
+    //             options: {
+    //                 emailRedirectTo: `${location.origin}/auth/callback`,
+    //                 data: {
+    //                     username: data.username,
+    //                     // verified: true,
+    //                 },
+    //             },
+    //         })
+    //         router.refresh()
+    //         if (error) {
+    //             console.log(error)
+    //             setMessage(error.message)
+    //         } else {
+    //             setMessage(
+    //                 "Account Created! Check email for further intructions"
+    //             )
+    //         }
+    //         messageRef.current?.scrollIntoView({ behavior: "smooth" })
+    //     } catch (error) {
+    //         console.log(error)
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
     return (
         <div className="m-24 flex flex-col gap-10 items-center">
             <Image
@@ -93,11 +99,7 @@ export default function Index() {
                 className="aspect-auto object-contain h-12"
             />
             <h1 className="text-4xl">Create your account</h1>
-            <form
-                onSubmit={handleSubmit(createAccount)}
-                noValidate
-                className="flex flex-col gap-5 "
-            >
+            <form className="flex flex-col gap-5 ">
                 <input
                     placeholder="Enter @username"
                     {...register("username")}

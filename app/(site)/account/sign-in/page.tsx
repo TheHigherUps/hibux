@@ -66,6 +66,7 @@ export default function Index() {
                     className="px-5 py-4 text-2xl rounded-lg"
                 />
                 <input
+                    type="password"
                     placeholder="Enter Password"
                     value={form.password}
                     onChange={(e) => {
@@ -81,13 +82,13 @@ export default function Index() {
                 >
                     Sign in
                 </Button>
-                <button
+                {/* <button
                     disabled={loading}
                     type="submit"
                     className="text-2xl bg-green-400 rounded-lg disabled:bg-green-400/40 disabled:text-neutral-400"
                 >
                     Log in
-                </button>
+                </button> */}
                 <p className="text-neutral-500 text-center">
                     Don&apos;t have an account?{" "}
                     <Link
