@@ -56,7 +56,10 @@ export default function Index() {
                 className="aspect-auto h-12 object-contain"
             />
             <h1 className="text-4xl">Sign in to your account</h1>
-            <form onSubmit={createAccount} className="flex flex-col gap-5 ">
+            <form
+                // onSubmit={createAccount}
+                className="flex flex-col gap-5 "
+            >
                 <input
                     placeholder="Enter Email"
                     value={form.email}
