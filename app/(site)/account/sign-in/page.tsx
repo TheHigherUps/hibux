@@ -7,29 +7,46 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import logo from "@/public/images/logo.png"
 import Image from "next/image"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { AiOutlineInfoCircle } from "react-icons/ai"
+import { zodResolver } from "@hookform/resolvers/zod"
+import toast, { Toaster } from "react-hot-toast"
+
+const Schema = z.object({
+    email: z.string().nonempty("Email is required").email("Email is not valid"),
+    password: z.string().nonempty("Password is required"),
+})
+
+type FormInput = z.infer<typeof Schema>
 
 export default function Index() {
     const supabase = createClientComponentClient<Database>()
     const router = useRouter()
-    const [form, setForm] = useState({ email: "", password: "" })
+    const form = useForm<FormInput>({ resolver: zodResolver(Schema) })
+    const { register, handleSubmit, formState } = form
+    const errors = formState.errors
+    // const [form, setForm] = useState({ email: "", password: "" })
     const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(false)
 
-    async function createAccount(e: React.FormEvent<EventTarget>) {
-        e.preventDefault()
+    async function handleLogin(data: FormInput) {
         try {
             setLoading(true)
             const { error } = await supabase.auth.signInWithPassword({
-                email: form.email,
-                password: form.password,
+                email: data.email,
+                password: data.password,
             })
             if (error?.message === "Email not confirmed") {
                 const { error: resendEmail } = await supabase.auth.resend({
                     type: "signup",
-                    email: form.email,
+                    email: data.email,
                     options: {
                         emailRedirectTo: `${location.origin}/auth/callback`,
                     },
+                })
+                toast("Email not confirmed, Check email for more information", {
+                    icon: <AiOutlineInfoCircle size={32} color="blue" />,
                 })
                 setMessage(
                     "Email not confirmed. Check email for more information"
@@ -37,8 +54,10 @@ export default function Index() {
                 return
             }
             if (error) {
+                toast.error(`Error signing into account: ${error.message}`)
                 setMessage(error.message)
             } else {
+                toast.success("Success! Signing in now!")
                 setMessage("Success!")
                 router.refresh()
             }
@@ -50,33 +69,49 @@ export default function Index() {
     }
     return (
         <div className="m-24 flex flex-col gap-10 items-center">
+            <Toaster />
             <Image
                 src={logo}
                 alt=""
                 className="aspect-auto h-12 object-contain"
             />
             <h1 className="text-4xl">Sign in to your account</h1>
-            <form onSubmit={createAccount} className="flex flex-col gap-5 ">
-                <input
-                    placeholder="Enter Email"
-                    value={form.email}
-                    onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                    }
-                    className="px-5 py-4 text-2xl rounded-lg"
-                />
-                <input
-                    type="password"
-                    placeholder="Enter Password"
-                    value={form.password}
-                    onChange={(e) => {
-                        setForm({ ...form, password: e.target.value })
-                    }}
-                    className="px-5 py-4 text-2xl rounded-lg"
-                />
+            <form
+                onSubmit={handleSubmit(handleLogin)}
+                className="flex flex-col gap-5 "
+            >
+                <div>
+                    <input
+                        placeholder="Enter Email"
+                        {...register("email")}
+                        // value={form.email}
+                        // onChange={(e) =>
+                        //     setForm({ ...form, email: e.target.value })
+                        // }
+                        className="px-5 py-4 text-2xl rounded-lg"
+                    />
+                    <p className="text-red-400 pl-1 pt-1">
+                        {errors.email?.message}
+                    </p>
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Enter Password"
+                        {...register("password")}
+                        // value={form.password}
+                        // onChange={(e) => {
+                        //     setForm({ ...form, password: e.target.value })
+                        // }}
+                        className="px-5 py-4 text-2xl rounded-lg"
+                    />
+                    <p className="text-red-400 pl-1 pt-1">
+                        {errors.password?.message}
+                    </p>
+                </div>
                 <Button
                     type="submit"
-                    className="text-2xl"
+                    className="text-2xl w-[75%] self-center"
                     disabled={loading}
                     loading={loading}
                 >
@@ -98,7 +133,6 @@ export default function Index() {
                         Create one now!
                     </Link>
                 </p>
-                <p>{message}</p>
             </form>
         </div>
     )

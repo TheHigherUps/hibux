@@ -10,6 +10,11 @@ import Image from "next/image"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Error from "@/components/Error"
+import { BiError } from "react-icons/bi"
+import { Transition } from "@headlessui/react"
+import { AiOutlineClose } from "react-icons/ai"
+import toast, { Toaster } from "react-hot-toast"
 
 const Schema = z
     .object({
@@ -47,13 +52,11 @@ export default function Index() {
     const { errors } = formState
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState("")
+    const [messageOpen, setMessageOpen] = useState(false)
 
     useEffect(() => {
-        setTimeout(() => {
-            setMessage("")
-        }, 4500)
-        console.log("p")
-    }, [message])
+        setMessage("")
+    }, [form])
 
     async function createAccount(data: FormInput) {
         try {
@@ -72,10 +75,10 @@ export default function Index() {
             router.refresh()
             if (error) {
                 console.log(error)
-                setMessage(error.message)
+                toast.error(`Error Creating Account: ${error.message}`)
             } else {
-                setMessage(
-                    "Account Created! Check email for further intructions"
+                toast.success(
+                    "Account Created! Check email for futher intructions"
                 )
             }
             messageRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -87,49 +90,66 @@ export default function Index() {
     }
     return (
         <div className="m-24 flex flex-col gap-10 items-center">
+            <Toaster />
             <Image
                 src={logo}
                 alt=""
                 className="aspect-auto object-contain h-12"
             />
-            <h1 className="text-4xl">Create your account</h1>
+            <div>
+                <h1 className="text-4xl">Create your account</h1>
+            </div>
             <form
                 onSubmit={handleSubmit(createAccount)}
                 noValidate
                 className="flex flex-col gap-5 "
             >
-                <input
-                    placeholder="Enter @username"
-                    {...register("username")}
-                    className="px-5 py-4 text-2xl rounded-lg"
-                />
-                <p className="text-red-400">{errors.username?.message}</p>
-                <input
-                    placeholder="Enter Email"
-                    {...register("email")}
-                    className="px-5 py-4 text-2xl rounded-lg"
-                />
-                <p className="text-red-400">{errors.email?.message}</p>
-                <input
-                    type="password"
-                    placeholder="Enter Password"
-                    {...register("password")}
-                    className="px-5 py-4 text-2xl rounded-lg"
-                />
-                <p className="text-red-400">{errors.password?.message}</p>
-                <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    {...register("passwordConfirm")}
-                    className="px-5 py-4 text-2xl rounded-lg"
-                />
-                <p className="text-red-400">
-                    {errors.passwordConfirm?.message}
-                </p>
+                <div>
+                    <input
+                        placeholder="Enter @username"
+                        {...register("username")}
+                        className="px-5 py-4 text-2xl rounded-lg"
+                    />
+                    <p className="text-red-400 pt-1 pl-1">
+                        {errors.username?.message}
+                    </p>
+                </div>
+                <div>
+                    <input
+                        placeholder="Enter Email"
+                        {...register("email")}
+                        className="px-5 py-4 text-2xl rounded-lg"
+                    />
+                    <p className="text-red-400 pl-1 pt-1">
+                        {errors.email?.message}
+                    </p>
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Enter Password"
+                        {...register("password")}
+                        className="px-5 py-4 text-2xl rounded-lg"
+                    />
+                    <p className="text-red-400 pl-1 pt-1">
+                        {errors.password?.message}
+                    </p>
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Confirm Password"
+                        {...register("passwordConfirm")}
+                        className="px-5 py-4 text-2xl rounded-lg"
+                    />
+                    <p className="text-red-400 pl-1 pt-1">
+                        {errors.passwordConfirm?.message}
+                    </p>
+                </div>
                 <Button
                     loading={loading}
                     disabled={loading}
-                    className="text-2xl"
+                    className="text-2xl w-[75%] self-center"
                 >
                     Create Account
                 </Button>
@@ -143,11 +163,6 @@ export default function Index() {
                     </Link>
                 </p>
             </form>
-            <div className="w-full max-w-full">
-                <p ref={messageRef} className="break-all">
-                    {message}
-                </p>
-            </div>
         </div>
     )
 }
