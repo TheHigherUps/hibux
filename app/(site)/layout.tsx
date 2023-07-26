@@ -4,6 +4,8 @@ import type { Metadata } from "next"
 import { Inter, Noto_Sans, Pangolin } from "next/font/google"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
+import Footer from "@/components/Footer"
+import Link from "next/link"
 
 const inter = Inter({ subsets: ["latin"] })
 // const font = Noto_Sans({

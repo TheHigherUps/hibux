@@ -12,6 +12,7 @@ import { GoVerified } from "react-icons/go"
 import Button from "./Button"
 import logo from "@/public/images/logo.png"
 import Image from "next/image"
+import Footer from "./Footer"
 
 interface HeaderProps {
     children: React.ReactNode
@@ -144,8 +145,9 @@ const Header: React.FC<HeaderProps> = ({ user, children }) => {
                     </div>
                 </header>
             ) : null}
-            <main className="flex-1 h-full overflow-y-auto bg-gray-700">
+            <main className="flex-1 flex flex-col justify-between h-full overflow-y-auto bg-gray-700">
                 {children}
+                <Footer />
             </main>
         </div>
     )
